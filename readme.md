@@ -41,7 +41,7 @@ e risco.
 - Para pleno funcionamento e geração correta das classes cliente, matenha as versões 
   utilizadas neste exemplo.
 
-- A documentação oficial da API e do DICT podem ser consultadas no [projeto de interface do DICT](https://github.com/bacen/pi-dict-interface)
+- A documentação oficial da API e do DICT podem ser consultadas no [projeto de interface do DICT](https://github.com/bacen/pix-dict-api)
 
 ### Tecnologias utilizadas:
 ```
