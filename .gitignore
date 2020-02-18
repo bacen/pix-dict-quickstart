@@ -1,0 +1,12 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+*.pfx
+
+# Maven
+log/
+target/
+
+.openapi-generator/
+src/main/resources/spec.yaml
