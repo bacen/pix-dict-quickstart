@@ -53,7 +53,7 @@ Maven 3.6.2
 
 - Baixe a aplicação com o seguinte comando:
 ```
-git clone https://git.bcnet.bcb.gov.br/pi/dict/dict-quickstart.git
+git clone https://github.com/bacen/pix-dict-quickstart.git
 ```
 
 - Dentro da pasta do projeto, execute:
