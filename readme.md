@@ -1,6 +1,6 @@
 ## *DICT - QuickStart*
 
-Bem vindo ao QuickStart do DICT, o Diretório de Identificadores de Contas Transacionais
+Bem-vindo ao QuickStart do DICT, o Diretório de Identificadores de Contas Transacionais
 do PIX (Sistema de Pagamentos Instantâneos do Banco Central do Brasil). O objetivo 
 é guiar o usuário/desenvolvedor no primeiro contato com a API do DICT. O público-alvo
 são profissionais de TI dos Prestadores de Serviços de Pagamentos (PSP). Se você
