@@ -1,5 +1,6 @@
 package br.gov.bcb.pi.dict;
 
+import br.gov.bcb.pi.dict.api.ClaimApi;
 import br.gov.bcb.pi.dict.api.DirectoryApi;
 import br.gov.bcb.pi.dict.api.model.*;
 import com.beust.jcommander.JCommander;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import static br.gov.bcb.pi.dict.api.model.EntryOperationReason.USER_REQUESTED;
 import static com.google.common.hash.Hashing.hmacSha256;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -22,7 +24,10 @@ public class App {
     @Parameter(names = "-ispb", description = "ISPB do participante")
     private String ispb = "12345678";
     @Parameter(names = "-baseAddress", description = "Endereço-base da API")
-    private String baseAddress = "https://dict-h.pi.rsfn.net.br/dict/api/v1";
+    private String baseAddress = "https://dict-h.pi.rsfn.net.br/api/v1";
+
+    private DirectoryApi dictApi;
+    private ClaimApi claimApi;
 
     public static void main(String[] args) throws IOException {
         App main = new App();
@@ -34,12 +39,13 @@ public class App {
     }
 
     public void run() {
-        DirectoryApi dictApi = ApiClientFactory.createApiClient(baseAddress);
+        this.dictApi = ApiClientFactory.createApiClient(baseAddress, DirectoryApi.class);
+        this.claimApi = ApiClientFactory.createApiClient(baseAddress, ClaimApi.class);
 
         // cria um vínculo no DICT
         Entry entry = ObjectFactory.createRandomEntry(ispb);
-        CreateEntryRequest createRequest = new CreateEntryRequest().entry(entry);
-        handleCreateEntryResponse(dictApi.createEntry(createRequest));
+        CreateEntryRequest createRequest = new CreateEntryRequest().entry(entry).reason(USER_REQUESTED);
+        handleCreateEntryResponse(createRequest, this.dictApi.createEntry(createRequest));
 
         // consulta um vínculo
         String randomCpf = randomNumeric(11);
@@ -49,14 +55,53 @@ public class App {
         String piEndToEndId = randomAlphanumeric(32);
 
         String key = "00038166000105";
-        handleGetEntryResponse(dictApi.getEntry(key, ispb, piPayerId, piEndToEndId));
+        handleGetEntryResponse(this.dictApi.getEntry(key, ispb, piPayerId, piEndToEndId));
     }
 
-    public void handleCreateEntryResponse(Response response) {
+    public void handleCreateEntryResponse(CreateEntryRequest createRequest, Response response) {
         Preconditions.checkNotNull(response);
         switch (response.getStatus()) {
             case 201:
                 System.out.println(">> Retorno: " + response.readEntity(CreateEntryResponse.class).getEntry());
+                break;
+            case 400:
+                Problem problem = response.readEntity(Problem.class);
+                System.out.println(">> Retorno: " + response.readEntity(Problem.class));
+
+                ClaimType claimTypeToCreate = null;
+                if (problem.getType().endsWith("/EntryKeyOwnedByDifferentPerson")) {
+                    claimTypeToCreate = ClaimType.OWNERSHIP;
+                } else if (problem.getType().endsWith("/EntryKeyInCustodyOfDifferentParticipant")) {
+                    claimTypeToCreate = ClaimType.PORTABILITY;
+                }
+
+                if (claimTypeToCreate != null) {
+                    Entry entry = createRequest.getEntry();
+                    Claim claim = new Claim()
+                            .type(claimTypeToCreate)
+                            .key(entry.getKey())
+                            .keyType(entry.getKeyType())
+                            .claimer(entry.getOwner())
+                            .claimerAccount(entry.getAccount());
+                    handleCreateClaimResponse(this.claimApi.createClaim(new CreateClaimRequest().claim(claim)));
+                }
+
+                break;
+            case 403:
+            case 503:
+                System.out.println(">> Retorno: " + response.readEntity(Problem.class));
+                break;
+            default:
+                System.out.println(">> Retorno: " + response.getStatus());
+        }
+
+    }
+
+    public void handleCreateClaimResponse(Response response) {
+        Preconditions.checkNotNull(response);
+        switch (response.getStatus()) {
+            case 201:
+                System.out.println(">> Retorno: " + response.readEntity(CreateClaimResponse.class).getClaim());
                 break;
             case 400:
             case 403:
@@ -66,7 +111,6 @@ public class App {
             default:
                 System.out.println(">> Retorno: " + response.getStatus());
         }
-
     }
 
     public void handleGetEntryResponse(Response response) {

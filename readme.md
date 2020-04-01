@@ -69,7 +69,7 @@ java -Djavax.net.ssl.keyStore=${PWD}/client.pfx \
      -Djavax.net.ssl.keyStorePassword=changeit \
      -jar target/dict-quickstart.jar \
      -ispb <ispb-do-participante> \
-     -baseAddress https://dict-h.pi.rsfn.net.br/dict/api/v1  
+     -baseAddress https://dict-h.pi.rsfn.net.br/api/v1  
 ```
  
 
