@@ -12,7 +12,7 @@ conectada à RSFN (Rede do Sistema Financeiro Nacional), e com certificados ISPB
 e registrados previamente para fins de realização de Pagamentos Instantâneos.
 
 Se você tiver alguma dúvida, ou se esse é seu primeiro contato com o PIX ou com 
-o  DICT, recomendandamos que verifique a página oficial do ecossitema de 
+o  DICT, recomendamos que verifique a página oficial do ecossitema de 
 [pagamentos instantâneos](https://www.bcb.gov.br/estabilidadefinanceira/forumpagamentosinstantaneos),
 especialmente: Especificações Técnicas e de Negócio; Manual das Interfaces de Comunicação; 
 Manual de Conectividade com a RSFN; e o Manual de Segurança.
