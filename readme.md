@@ -36,7 +36,11 @@ e risco.
 - No quickstart, para simplificar, os objetos criptográficos (certificado e chave
   privada) são armazenados em um arquivo, mas isso não deve ser replicado no ambiente 
   de produção! Recomendamos a utilização de um hardware security module (HSM) para 
-  gerenciar o acesso a essas informações. 
+  gerenciar o acesso a essas informações.
+  
+- O processo de assinatura digital das requisições ao DICT é exemplificado no quickstart. 
+No entanto, as assinaturas das respostas do DICT **não estão sendo validadas**. Para produção,
+é fundamental que as assinaturas digitais sejam corretamente validadas.
 
 - Para pleno funcionamento e geração correta das classes cliente, matenha as versões 
   utilizadas neste exemplo.

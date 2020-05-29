@@ -22,6 +22,7 @@
     <guava.version>28.1-jre</guava.version>
     <commons-lang.version>3.9</commons-lang.version>
     <jcommander.version>1.78</jcommander.version>
+    <lombok.version>1.18.10</lombok.version>
 
     <openapi-generator.version>3.3.4</openapi-generator.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -97,6 +98,12 @@
       <groupId>com.beust</groupId>
       <artifactId>jcommander</artifactId>
       <version>${jcommander.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
