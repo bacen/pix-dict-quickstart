@@ -67,8 +67,9 @@ public class SigningXMLStreamWriter extends DelegatingXMLStreamWriter {
 
 
     @Override
-    public void flush() throws XMLStreamException {
+    public void close() throws XMLStreamException {
         super.flush();
+        super.close();
         try {
             signer.sign(this.writerResult.getNode());
             Writer writer = new OutputStreamWriter(signedOutputStream);

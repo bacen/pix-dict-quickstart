@@ -45,7 +45,6 @@ public class ApiClientFactory {
             XmlFactory factory = (XmlFactory) writer.getFactory();
             XMLOutputFactory xmlOutputFactory = factory.getXMLOutputFactory();
             ToXmlGenerator g = factory.createGenerator(SigningXMLStreamWriter.create(xmlOutputFactory, rawStream));
-            g.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
             return g;
         }
     }
