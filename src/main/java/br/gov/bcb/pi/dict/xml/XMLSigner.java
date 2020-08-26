@@ -4,7 +4,12 @@ import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 import org.w3c.dom.Node;
 
-import javax.xml.crypto.dsig.*;
+import javax.xml.crypto.dsig.DigestMethod;
+import javax.xml.crypto.dsig.Reference;
+import javax.xml.crypto.dsig.SignedInfo;
+import javax.xml.crypto.dsig.Transform;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
@@ -15,7 +20,11 @@ import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -28,22 +37,26 @@ import static javax.xml.crypto.dsig.CanonicalizationMethod.EXCLUSIVE;
 class XMLSigner {
 
     private static final String KEY_INFO_ID = "key-info-id";
-    private static final KeyStore store;
     private static final String ROOT_URI = "";
+    private static final String KEY_STORE_TYPE = "PKCS12";
     private final XMLSignatureFactory xmlSignatureFactory = XMLSignatureFactory.getInstance("DOM");
 
-    static {
+    private final KeyStore store;
+    private final String password;
+
+    XMLSigner(String keyStoreFile, String password) {
+        this.password = password;
         try {
-            InputStream keystoreIS = new FileInputStream(System.getProperty("javax.net.ssl.keyStore"));
-            store = KeyStore.getInstance("PKCS12");
-            store.load(keystoreIS, System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
-            Preconditions.checkArgument(store.size() == 1, "Esperado que keystore tivesse 1 alias");
+            InputStream keystoreIS = new FileInputStream(keyStoreFile);
+            store = KeyStore.getInstance(KEY_STORE_TYPE);
+            store.load(keystoreIS, this.password.toCharArray());
+            Preconditions.checkArgument(store.size() == 1, "Esperado que keystore tivesse apenas 1 alias");
         } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void sign(Node node) {
+    void sign(Node node) {
         try {
             XMLSignature xmlSignature = newXMLSignature(newArrayList(newReferenceKeyInfo(), newReferenceRoot()));
             DOMSignContext signContext = newDOMSignContext(node);
@@ -131,7 +144,7 @@ class XMLSigner {
     @SneakyThrows
     private PrivateKey getPrivateKey() {
         String alias = store.aliases().nextElement();
-        return (PrivateKey) store.getKey(alias, System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
+        return (PrivateKey) store.getKey(alias, this.password.toCharArray());
     }
 
 }

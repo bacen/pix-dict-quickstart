@@ -4,6 +4,8 @@ import br.gov.bcb.pi.dict.api.model.*;
 import org.ajbrown.namemachine.Name;
 import org.ajbrown.namemachine.NameGenerator;
 
+import java.time.OffsetDateTime;
+
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
 public class ObjectFactory {
@@ -16,7 +18,8 @@ public class ObjectFactory {
                 .participant(ispb)
                 .accountNumber(randomNumeric(5))
                 .branch(randomNumeric(4))
-                .accountType(AccountType.CACC);
+                .accountType(AccountType.CACC)
+                .openingDate(OffsetDateTime.now());
 
         Name randomName = NAME_GENERATOR.generateName();
         NaturalPerson owner = new NaturalPerson()

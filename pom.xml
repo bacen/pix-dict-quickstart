@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <dict-api.version>1.0.0-RC2</dict-api.version>
+    <dict-api.version>1.0.0-RC6</dict-api.version>
     <dict.openapi-spec.url>https://github.com/bacen/pix-dict-api/releases/download/v${dict-api.version}/spec.yaml</dict.openapi-spec.url>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>

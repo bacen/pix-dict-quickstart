@@ -10,3 +10,4 @@ target/
 
 .openapi-generator/
 src/main/resources/spec.yaml
+/signature.jks

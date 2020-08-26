@@ -48,10 +48,13 @@ public class SigningXMLStreamWriter extends DelegatingXMLStreamWriter {
     private final XMLSigner signer;
 
     @SneakyThrows
-    public static SigningXMLStreamWriter create(XMLOutputFactory xmlOutputFactory, OutputStream signedOutputStream) {
+    public static SigningXMLStreamWriter create(XMLOutputFactory xmlOutputFactory,
+                                                OutputStream signedOutputStream,
+                                                String keyStoreFile,
+                                                String keyStorePassword) {
         DOMResult writerResult = new DOMResult(newDocument());
         XMLStreamWriter xmlStreamWriter = xmlOutputFactory.createXMLStreamWriter(writerResult);
-        XMLSigner signer = new XMLSigner();
+        XMLSigner signer = new XMLSigner(keyStoreFile, keyStorePassword);
         return new SigningXMLStreamWriter(signer, xmlStreamWriter, writerResult, signedOutputStream);
     }
 
@@ -64,7 +67,6 @@ public class SigningXMLStreamWriter extends DelegatingXMLStreamWriter {
         this.writerResult = writerResult;
         this.signedOutputStream = signedOutputStream;
     }
-
 
     @Override
     public void close() throws XMLStreamException {
