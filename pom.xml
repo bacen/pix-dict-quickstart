@@ -24,7 +24,7 @@
     <jcommander.version>1.78</jcommander.version>
     <lombok.version>1.18.10</lombok.version>
 
-    <openapi-generator.version>3.3.4</openapi-generator.version>
+    <openapi-generator.version>5.1.0</openapi-generator.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
     <maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
